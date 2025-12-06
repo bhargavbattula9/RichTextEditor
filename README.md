@@ -35,17 +35,14 @@ A free, open-source WYSIWYG (What You See Is What You Get) rich text editor simi
 
 ## 📦 Installation
 
-### Option 1: Direct Download
+### Direct Download
 Download `richeditor.js` and include it in your HTML:
 
 ```html
 <script src="richeditor.js"></script>
 ```
 
-### Option 2: CDN (Coming Soon)
-```html
-<script src="https://cdn.example.com/richeditor/1.0.0/richeditor.min.js"></script>
-```
+
 
 ---
 
