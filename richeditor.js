@@ -384,8 +384,8 @@
         // Default font family (applied to editor on init)
         defaultFontFamily: 'Arial, sans-serif',
         
-        // Default font size (applied to editor on init)
-        defaultFontSize: '14px',
+        // Default font size (applied to editor on init) - use pt to match dropdown options
+        defaultFontSize: '14pt',
         
         // Default line height
         defaultLineHeight: '1.5',
@@ -1145,11 +1145,25 @@
                 type: 'button'
             });
             
-            // Set default label based on dropdown type
+            // Set default label based on dropdown type and config defaults
             let defaultLabel = 'Paragraph';
-            if (name === 'fontFamily') defaultLabel = 'Font';
-            else if (name === 'fontSize') defaultLabel = '14pt';
-            else if (name === 'lineHeight') defaultLabel = 'Line Height';
+            if (name === 'fontFamily') {
+                // Find the label for the default font family
+                const defaultFont = this.options.fontFamilies.find(f => 
+                    f.value.toLowerCase().includes(this.options.defaultFontFamily.split(',')[0].toLowerCase().trim())
+                );
+                defaultLabel = defaultFont ? defaultFont.label : 'Font';
+            } else if (name === 'fontSize') {
+                // Find the label for the default font size (both should be in pt)
+                const defaultSize = this.options.fontSizes.find(s => s.value === this.options.defaultFontSize);
+                defaultLabel = defaultSize ? defaultSize.label : this.options.defaultFontSize;
+            } else if (name === 'lineHeight') {
+                // Find the label for the default line height
+                const defaultLH = this.options.lineHeights.find(lh => 
+                    Math.abs(parseFloat(lh.value) - parseFloat(this.options.defaultLineHeight)) < 0.1
+                );
+                defaultLabel = defaultLH ? defaultLH.label : this.options.defaultLineHeight;
+            }
             
             const label = Utils.createElement('span', { 
                 className: 'richeditor-dropdown-label',
@@ -1173,6 +1187,10 @@
                         'data-value': opt.value,
                         innerHTML: `<${opt.value}>${opt.label}</${opt.value}>`
                     });
+                    // Mark paragraph as active by default
+                    if (opt.value === 'p') {
+                        item.classList.add('active');
+                    }
                     item.addEventListener('click', () => {
                         this.restoreSelection();
                         this.execCommand('formatBlock', opt.value);
@@ -1189,6 +1207,10 @@
                     });
                     item.style.fontFamily = opt.value;
                     item.textContent = opt.label;
+                    // Mark default font as active
+                    if (opt.value.toLowerCase().includes(this.options.defaultFontFamily.split(',')[0].toLowerCase().trim())) {
+                        item.classList.add('active');
+                    }
                     item.addEventListener('click', () => {
                         this.restoreSelection();
                         this.execCommand('fontName', opt.value);
@@ -1204,6 +1226,10 @@
                         'data-value': opt.value
                     });
                     item.textContent = opt.label;
+                    // Mark default size as active (both should be in pt)
+                    if (opt.value === this.options.defaultFontSize) {
+                        item.classList.add('active');
+                    }
                     item.addEventListener('click', () => {
                         this.restoreSelection();
                         this.applyFontSize(opt.value);
@@ -1219,6 +1245,10 @@
                         'data-value': opt.value
                     });
                     item.textContent = opt.label;
+                    // Mark default line height as active
+                    if (Math.abs(parseFloat(opt.value) - parseFloat(this.options.defaultLineHeight)) < 0.1) {
+                        item.classList.add('active');
+                    }
                     item.addEventListener('click', () => {
                         this.restoreSelection();
                         this.applyLineHeight(opt.value);
@@ -1688,34 +1718,104 @@
                 selection.removeAllRanges();
                 selection.addRange(newRange);
             } else {
-                // Wrap selection in span with font size
+                // Check if selection is entirely within a single span with font-size
+                const commonAncestor = range.commonAncestorContainer;
+                let parentSpan = null;
+                
+                // Check if we're selecting all content of a span with font-size
+                if (commonAncestor.nodeType === Node.ELEMENT_NODE && 
+                    commonAncestor.tagName === 'SPAN' && 
+                    commonAncestor.style.fontSize) {
+                    parentSpan = commonAncestor;
+                } else if (commonAncestor.nodeType === Node.TEXT_NODE &&
+                           commonAncestor.parentElement &&
+                           commonAncestor.parentElement.tagName === 'SPAN' &&
+                           commonAncestor.parentElement.style.fontSize) {
+                    parentSpan = commonAncestor.parentElement;
+                }
+                
+                // If entire selection is within a font-size span, just update it
+                if (parentSpan) {
+                    const spanRange = document.createRange();
+                    spanRange.selectNodeContents(parentSpan);
+                    
+                    // Check if selection covers the entire span content
+                    if (range.toString() === spanRange.toString()) {
+                        parentSpan.style.fontSize = size;
+                        this.syncContent();
+                        this.updateToolbarState();
+                        return;
+                    }
+                }
+                
+                // Extract contents and remove any existing font-size styling
+                const fragment = range.extractContents();
+                
+                // Remove font-size from any child spans
+                const childSpans = fragment.querySelectorAll('span[style*="font-size"]');
+                childSpans.forEach(span => {
+                    span.style.fontSize = '';
+                    // If span has no other styles, unwrap it
+                    if (!span.getAttribute('style') || span.getAttribute('style').trim() === '') {
+                        while (span.firstChild) {
+                            span.parentNode.insertBefore(span.firstChild, span);
+                        }
+                        span.parentNode.removeChild(span);
+                    }
+                });
+                
+                // Create new span with font size
                 const span = document.createElement('span');
                 span.style.fontSize = size;
+                span.appendChild(fragment);
                 
-                try {
-                    span.appendChild(range.extractContents());
-                    range.insertNode(span);
-                    
-                    // Select the new content
-                    selection.removeAllRanges();
-                    const newRange = document.createRange();
-                    newRange.selectNodeContents(span);
-                    selection.addRange(newRange);
-                } catch (e) {
-                    // Fallback to execCommand
-                    document.execCommand('fontSize', false, '7');
-                    // Then replace with proper CSS
-                    this.editor.querySelectorAll('font[size="7"]').forEach(el => {
-                        const newSpan = document.createElement('span');
-                        newSpan.style.fontSize = size;
-                        newSpan.innerHTML = el.innerHTML;
-                        el.parentNode.replaceChild(newSpan, el);
-                    });
-                }
+                // Insert the new span
+                range.insertNode(span);
+                
+                // Clean up empty text nodes that might cause line breaks
+                this.cleanEmptyNodes(span.parentNode);
+                
+                // Select the new content
+                selection.removeAllRanges();
+                const newRange = document.createRange();
+                newRange.selectNodeContents(span);
+                selection.addRange(newRange);
             }
             
             this.syncContent();
             this.updateToolbarState();
+        }
+
+        /**
+         * Clean up empty text nodes and normalize
+         */
+        cleanEmptyNodes(element) {
+            if (!element) return;
+            
+            // Remove empty text nodes
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            const emptyNodes = [];
+            let node;
+            while (node = walker.nextNode()) {
+                if (node.textContent === '' || node.textContent === '\n') {
+                    emptyNodes.push(node);
+                }
+            }
+            
+            emptyNodes.forEach(n => {
+                if (n.parentNode) {
+                    n.parentNode.removeChild(n);
+                }
+            });
+            
+            // Normalize to merge adjacent text nodes
+            element.normalize();
         }
 
         /**
@@ -2301,6 +2401,194 @@
             // Lists
             this.updateToolbarButton('orderedList', document.queryCommandState('insertOrderedList'));
             this.updateToolbarButton('unorderedList', document.queryCommandState('insertUnorderedList'));
+            
+            // Update font family dropdown
+            this.updateFontDropdowns();
+        }
+
+        /**
+         * Update font family, font size, and line height dropdowns to show current values
+         */
+        updateFontDropdowns() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            
+            // Get the element at cursor position
+            let node = selection.anchorNode;
+            if (node && node.nodeType === Node.TEXT_NODE) {
+                node = node.parentElement;
+            }
+            
+            if (!node || !this.editor.contains(node)) return;
+            
+            // Get computed styles
+            const computedStyle = window.getComputedStyle(node);
+            
+            // Update font family dropdown
+            const fontFamilyDropdown = this.toolbar.querySelector('[data-dropdown-type="fontFamily"]');
+            if (fontFamilyDropdown) {
+                const currentFont = computedStyle.fontFamily;
+                const label = fontFamilyDropdown.querySelector('.richeditor-dropdown-label');
+                const menu = fontFamilyDropdown.querySelector('.richeditor-dropdown-menu');
+                
+                // Find matching font in options
+                const matchedFont = this.options.fontFamilies.find(f => {
+                    // Compare fonts (handle quotes and case)
+                    const fontValue = f.value.toLowerCase().replace(/['"]/g, '');
+                    const currentValue = currentFont.toLowerCase().replace(/['"]/g, '');
+                    return currentValue.includes(fontValue.split(',')[0].trim());
+                });
+                
+                if (label) {
+                    label.textContent = matchedFont ? matchedFont.label : 'Font';
+                }
+                
+                // Highlight active item in dropdown
+                if (menu) {
+                    menu.querySelectorAll('.richeditor-dropdown-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (matchedFont && item.dataset.value === matchedFont.value) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            }
+            
+            // Update font size dropdown
+            const fontSizeDropdown = this.toolbar.querySelector('[data-dropdown-type="fontSize"]');
+            if (fontSizeDropdown) {
+                const label = fontSizeDropdown.querySelector('.richeditor-dropdown-label');
+                const menu = fontSizeDropdown.querySelector('.richeditor-dropdown-menu');
+                
+                // Check inline style first (will be in pt since we apply pt)
+                let inlineSize = this.getInlineFontSize(node);
+                let matchedSize = null;
+                let displayPt = null;
+                
+                if (inlineSize) {
+                    // Inline style found - check if it's pt or px
+                    const unit = inlineSize.replace(/[\d.]/g, '');
+                    if (unit === 'pt') {
+                        // Direct match with pt
+                        matchedSize = this.options.fontSizes.find(s => s.value === inlineSize);
+                        displayPt = parseFloat(inlineSize);
+                    } else {
+                        // Convert px to pt
+                        const pxValue = parseFloat(inlineSize);
+                        displayPt = Math.round(pxValue * 0.75);
+                        matchedSize = this.options.fontSizes.find(s => {
+                            const optPt = parseFloat(s.value);
+                            return Math.abs(optPt - displayPt) <= 1;
+                        });
+                    }
+                } else {
+                    // No inline style - use computed style (browser returns px)
+                    const computedSize = computedStyle.fontSize;
+                    const pxValue = parseFloat(computedSize);
+                    displayPt = Math.round(pxValue * 0.75);
+                    matchedSize = this.options.fontSizes.find(s => {
+                        const optPt = parseFloat(s.value);
+                        return Math.abs(optPt - displayPt) <= 1;
+                    });
+                }
+                
+                if (label) {
+                    label.textContent = matchedSize ? matchedSize.label : `${displayPt}pt`;
+                }
+                
+                // Highlight active item in dropdown
+                if (menu) {
+                    menu.querySelectorAll('.richeditor-dropdown-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (matchedSize && item.dataset.value === matchedSize.value) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            }
+            
+            // Update line height dropdown
+            const lineHeightDropdown = this.toolbar.querySelector('[data-dropdown-type="lineHeight"]');
+            if (lineHeightDropdown) {
+                const currentLineHeight = computedStyle.lineHeight;
+                const label = lineHeightDropdown.querySelector('.richeditor-dropdown-label');
+                const menu = lineHeightDropdown.querySelector('.richeditor-dropdown-menu');
+                let matchedLH = null;
+                let displayValue = 'Line Height';
+                
+                if (currentLineHeight !== 'normal') {
+                    // Convert to number if it's in px
+                    const fontSize = parseFloat(computedStyle.fontSize);
+                    const lineHeightPx = parseFloat(currentLineHeight);
+                    const ratio = (lineHeightPx / fontSize).toFixed(2);
+                    
+                    // Find matching line height in options
+                    matchedLH = this.options.lineHeights.find(lh => {
+                        return Math.abs(parseFloat(lh.value) - parseFloat(ratio)) < 0.1;
+                    });
+                    
+                    displayValue = matchedLH ? matchedLH.label : ratio;
+                }
+                
+                if (label) {
+                    label.textContent = displayValue;
+                }
+                
+                // Highlight active item in dropdown
+                if (menu) {
+                    menu.querySelectorAll('.richeditor-dropdown-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (matchedLH && item.dataset.value === matchedLH.value) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            }
+            
+            // Update format block dropdown
+            const formatBlockDropdown = this.toolbar.querySelector('[data-dropdown-type="formatBlock"]');
+            if (formatBlockDropdown) {
+                const label = formatBlockDropdown.querySelector('.richeditor-dropdown-label');
+                const menu = formatBlockDropdown.querySelector('.richeditor-dropdown-menu');
+                let matchedFormat = null;
+                
+                // Find the block element
+                let blockNode = node;
+                while (blockNode && blockNode !== this.editor) {
+                    const tagName = blockNode.tagName ? blockNode.tagName.toLowerCase() : '';
+                    matchedFormat = this.options.formatBlockOptions.find(f => f.value === tagName);
+                    if (matchedFormat) {
+                        if (label) {
+                            label.textContent = matchedFormat.label;
+                        }
+                        break;
+                    }
+                    blockNode = blockNode.parentElement;
+                }
+                
+                // Highlight active item in dropdown
+                if (menu) {
+                    menu.querySelectorAll('.richeditor-dropdown-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (matchedFormat && item.dataset.value === matchedFormat.value) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            }
+        }
+
+        /**
+         * Get inline font-size from element or its parents
+         */
+        getInlineFontSize(node) {
+            while (node && node !== this.editor) {
+                if (node.style && node.style.fontSize) {
+                    return node.style.fontSize;
+                }
+                node = node.parentElement;
+            }
+            return null;
         }
 
         /**
@@ -2705,6 +2993,16 @@
                 
                 .richeditor-dropdown-item:hover {
                     background: #f5f5f5;
+                }
+                
+                .richeditor-dropdown-item.active {
+                    background: #e3f2fd;
+                    color: #1976d2;
+                    font-weight: 500;
+                }
+                
+                .richeditor-dropdown-item.active:hover {
+                    background: #bbdefb;
                 }
                 
                 .richeditor-dropdown-item h1,

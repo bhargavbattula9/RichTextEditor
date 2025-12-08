@@ -528,6 +528,8 @@ editor.<span style="color: #a6e22e;">destroy</span>();</pre>
         // Initialize editor
         function initEditor(options = {}) {
             const defaultOptions = {
+				defaultFontFamily: 'Arial, sans-serif',
+				defaultFontSize: '14pt', 
                 height: parseInt(document.getElementById('heightInput').value) || 400,
                 placeholder: document.getElementById('placeholderInput').value || 'Start typing...',
                 theme: document.getElementById('themeSelect').value,
@@ -682,9 +684,53 @@ editor.<span style="color: #a6e22e;">destroy</span>();</pre>
 
         function apiSetContent() {
             editor.setContent(`
-                <h2>New Content Set via API</h2>
-                <p>This content was inserted using <code>editor.setContent()</code> method.</p>
-                <p>You can set any HTML content programmatically!</p>
+                 <h2>Welcome to RichEditor! 🎉</h2>
+                    <p>This is a <strong>full-featured</strong> WYSIWYG rich text editor, similar to TinyMCE but <em>completely free</em>!</p>
+                    <h3></h3><span style="font-size: 10pt;"><h3>Features:</h3><ul><li><b>Rich text formatting (bold, italic, underline, etc.)</b></li>
+                        <li><b>TinyMCE-style menu bar (Edit, Insert, Format, Table)</b></li>
+                        <li><b>15+ fonts and 7 font sizes</b></li>
+                        <li><b>Line height control</b></li>
+                        <li><b>Ordered and unordered lists</b></li>
+                        <li><b>Text alignment options</b></li>
+                        <li><b>Link and image insertion</b></li>
+                        <li><b>Table support with row/column management</b></li>
+                        <li><b>Code blocks</b></li>
+                        <li><b>And much more!</b></li></ul></span><ul>
+                    </ul>
+                    <blockquote><span style="background-color: rgb(255, 255, 0);"><font color="#ff0000">
+                        "The best editor is the one that gets out of your way and lets you focus on content."
+                    </font></span></blockquote>
+                    <p><span style="background-color: rgb(255, 255, 0);"><font color="#ff0000">Try it out! Select some text and use the toolbar or menu bar above to format it. 👆</font></span></p>
+                    <table>
+                        <tbody><tr>
+                            <th>Feature</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Rich Text</td>
+                            <td>✅ Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Menu Bar</td>
+                            <td>✅ Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Fonts &amp; Sizes</td>
+                            <td>✅ Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Line Height</td>
+                            <td>✅ Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Tables</td>
+                            <td>✅ Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Media</td>
+                            <td>✅ Complete</td>
+                        </tr>
+                    </tbody></table>
             `);
             document.getElementById('apiOutput').textContent = 'Content set successfully!';
         }
