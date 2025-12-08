@@ -381,6 +381,15 @@
         // Show menu bar (TinyMCE style)
         showMenuBar: true,
         
+        // Default font family (applied to editor on init)
+        defaultFontFamily: 'Arial, sans-serif',
+        
+        // Default font size (applied to editor on init)
+        defaultFontSize: '14px',
+        
+        // Default line height
+        defaultLineHeight: '1.5',
+        
         // Font families (matching TinyMCE)
         fontFamilies: [
             { value: 'Andale Mono, monospace', label: 'Andale Mono' },
@@ -1258,6 +1267,17 @@
             this.editor.setAttribute('contenteditable', 'true');
             this.editor.setAttribute('spellcheck', this.options.spellcheck);
             this.editor.setAttribute('data-placeholder', this.options.placeholder);
+            
+            // Apply default font styles
+            if (this.options.defaultFontFamily) {
+                this.editor.style.fontFamily = this.options.defaultFontFamily;
+            }
+            if (this.options.defaultFontSize) {
+                this.editor.style.fontSize = this.options.defaultFontSize;
+            }
+            if (this.options.defaultLineHeight) {
+                this.editor.style.lineHeight = this.options.defaultLineHeight;
+            }
             
             if (this.options.rtl) {
                 this.editor.setAttribute('dir', 'rtl');
