@@ -35,14 +35,17 @@ A free, open-source WYSIWYG (What You See Is What You Get) rich text editor simi
 
 ## 📦 Installation
 
-### Direct Download
+### Option 1: Direct Download
 Download `richeditor.js` and include it in your HTML:
 
 ```html
 <script src="richeditor.js"></script>
 ```
 
-
+### Option 2: CDN (Coming Soon)
+```html
+<script src="https://cdn.example.com/richeditor/1.0.0/richeditor.min.js"></script>
+```
 
 ---
 
@@ -194,6 +197,346 @@ const editor = new RichEditor('#editor', {
     enableFontSizes: true,
     enableLineHeight: true
 });
+```
+
+---
+
+## 🔤 Font Configuration
+
+### Default Font Settings
+
+Set the default font family, size, and line height for the editor:
+
+```javascript
+const editor = new RichEditor('#editor', {
+    defaultFontFamily: 'Georgia, serif',
+    defaultFontSize: '16px',
+    defaultLineHeight: '1.6'
+});
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `defaultFontFamily` | String | `'Arial, sans-serif'` | Default font for the editor |
+| `defaultFontSize` | String | `'14px'` | Default font size (use px, pt, em, rem) |
+| `defaultLineHeight` | String | `'1.5'` | Default line height |
+
+### Adding Custom Fonts
+
+You can customize the font dropdown by providing your own `fontFamilies` array:
+
+```javascript
+const editor = new RichEditor('#editor', {
+    fontFamilies: [
+        { value: 'Arial, sans-serif', label: 'Arial' },
+        { value: 'Georgia, serif', label: 'Georgia' },
+        { value: 'Times New Roman, serif', label: 'Times New Roman' },
+        // Add your custom fonts
+        { value: 'Roboto, sans-serif', label: 'Roboto' },
+        { value: 'Open Sans, sans-serif', label: 'Open Sans' },
+        { value: 'Lato, sans-serif', label: 'Lato' },
+        { value: 'Montserrat, sans-serif', label: 'Montserrat' },
+        { value: 'Poppins, sans-serif', label: 'Poppins' }
+    ]
+});
+```
+
+### Using Google Fonts
+
+To use Google Fonts, first include the font in your HTML, then add it to the `fontFamilies` array:
+
+**Step 1: Include Google Font in HTML**
+```html
+<head>
+    <!-- Add Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+```
+
+**Step 2: Add to fontFamilies**
+```javascript
+const editor = new RichEditor('#editor', {
+    defaultFontFamily: 'Roboto, sans-serif',
+    fontFamilies: [
+        // System fonts
+        { value: 'Arial, sans-serif', label: 'Arial' },
+        { value: 'Georgia, serif', label: 'Georgia' },
+        { value: 'Times New Roman, serif', label: 'Times New Roman' },
+        { value: 'Courier New, monospace', label: 'Courier New' },
+        
+        // Google Fonts
+        { value: 'Roboto, sans-serif', label: 'Roboto' },
+        { value: 'Open Sans, sans-serif', label: 'Open Sans' },
+        { value: 'Poppins, sans-serif', label: 'Poppins' },
+        { value: 'Lato, sans-serif', label: 'Lato' },
+        { value: 'Montserrat, sans-serif', label: 'Montserrat' },
+        { value: 'Playfair Display, serif', label: 'Playfair Display' },
+        { value: 'Merriweather, serif', label: 'Merriweather' },
+        { value: 'Source Code Pro, monospace', label: 'Source Code Pro' }
+    ]
+});
+```
+
+### Custom Font Sizes
+
+Customize the available font sizes:
+
+```javascript
+const editor = new RichEditor('#editor', {
+    fontSizes: [
+        { value: '10px', label: '10px' },
+        { value: '12px', label: '12px' },
+        { value: '14px', label: '14px' },
+        { value: '16px', label: '16px' },
+        { value: '18px', label: '18px' },
+        { value: '20px', label: '20px' },
+        { value: '24px', label: '24px' },
+        { value: '28px', label: '28px' },
+        { value: '32px', label: '32px' },
+        { value: '48px', label: '48px' }
+    ]
+});
+```
+
+### Custom Line Heights
+
+Customize the available line heights:
+
+```javascript
+const editor = new RichEditor('#editor', {
+    lineHeights: [
+        { value: '1', label: 'Single' },
+        { value: '1.15', label: '1.15' },
+        { value: '1.5', label: '1.5' },
+        { value: '1.75', label: '1.75' },
+        { value: '2', label: 'Double' },
+        { value: '2.5', label: '2.5' },
+        { value: '3', label: 'Triple' }
+    ]
+});
+```
+
+### Complete Font Configuration Example
+
+```javascript
+const editor = new RichEditor('#editor', {
+    // Set defaults
+    defaultFontFamily: 'Roboto, sans-serif',
+    defaultFontSize: '16px',
+    defaultLineHeight: '1.6',
+    
+    // Custom font families
+    fontFamilies: [
+        { value: 'Roboto, sans-serif', label: 'Roboto' },
+        { value: 'Open Sans, sans-serif', label: 'Open Sans' },
+        { value: 'Lato, sans-serif', label: 'Lato' },
+        { value: 'Georgia, serif', label: 'Georgia' },
+        { value: 'Arial, sans-serif', label: 'Arial' }
+    ],
+    
+    // Custom font sizes
+    fontSizes: [
+        { value: '12px', label: 'Small' },
+        { value: '16px', label: 'Normal' },
+        { value: '20px', label: 'Large' },
+        { value: '24px', label: 'X-Large' },
+        { value: '32px', label: 'XX-Large' }
+    ],
+    
+    // Custom line heights
+    lineHeights: [
+        { value: '1', label: 'Tight' },
+        { value: '1.5', label: 'Normal' },
+        { value: '2', label: 'Relaxed' }
+    ]
+});
+```
+
+### Default Font Families (Built-in)
+
+RichEditor comes with 15 built-in fonts:
+
+| Font Family | Type |
+|-------------|------|
+| Andale Mono | Monospace |
+| Arial | Sans-serif |
+| Arial Black | Sans-serif |
+| Book Antiqua | Serif |
+| Comic Sans MS | Cursive |
+| Courier New | Monospace |
+| Georgia | Serif |
+| Helvetica | Sans-serif |
+| Impact | Sans-serif |
+| Symbol | Symbol |
+| Tahoma | Sans-serif |
+| Terminal | Monospace |
+| Times New Roman | Serif |
+| Trebuchet MS | Sans-serif |
+| Verdana | Sans-serif |
+
+### Using Custom Font Files (.ttf, .woff, .woff2, .otf)
+
+If you have your own font files, you can add them to the editor in two steps:
+
+#### Step 1: Load the Font with CSS @font-face
+
+Add the `@font-face` rule in your HTML or CSS file:
+
+```html
+<style>
+    @font-face {
+        font-family: 'MyCustomFont';
+        src: url('fonts/MyCustomFont.woff2') format('woff2'),
+             url('fonts/MyCustomFont.woff') format('woff'),
+             url('fonts/MyCustomFont.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+    
+    /* If you have bold version */
+    @font-face {
+        font-family: 'MyCustomFont';
+        src: url('fonts/MyCustomFont-Bold.woff2') format('woff2'),
+             url('fonts/MyCustomFont-Bold.woff') format('woff'),
+             url('fonts/MyCustomFont-Bold.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+    }
+    
+    /* If you have italic version */
+    @font-face {
+        font-family: 'MyCustomFont';
+        src: url('fonts/MyCustomFont-Italic.woff2') format('woff2'),
+             url('fonts/MyCustomFont-Italic.woff') format('woff'),
+             url('fonts/MyCustomFont-Italic.ttf') format('truetype');
+        font-weight: normal;
+        font-style: italic;
+    }
+</style>
+```
+
+#### Step 2: Add to Editor Configuration
+
+```javascript
+const editor = new RichEditor('#editor', {
+    // Set as default font (optional)
+    defaultFontFamily: 'MyCustomFont, sans-serif',
+    
+    // Add to font dropdown
+    fontFamilies: [
+        { value: 'MyCustomFont, sans-serif', label: 'My Custom Font' },
+        { value: 'Arial, sans-serif', label: 'Arial' },
+        { value: 'Georgia, serif', label: 'Georgia' },
+        { value: 'Times New Roman, serif', label: 'Times New Roman' },
+        { value: 'Courier New, monospace', label: 'Courier New' }
+    ]
+});
+```
+
+#### Complete Example with Custom Font File
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editor with Custom Font</title>
+    
+    <!-- Load custom font file -->
+    <style>
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('fonts/MyCustomFont.woff2') format('woff2'),
+                 url('fonts/MyCustomFont.woff') format('woff'),
+                 url('fonts/MyCustomFont.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor"></div>
+    
+    <script src="richeditor.js"></script>
+    <script>
+        const editor = new RichEditor('#editor', {
+            defaultFontFamily: 'MyCustomFont, sans-serif',
+            fontFamilies: [
+                { value: 'MyCustomFont, sans-serif', label: 'My Custom Font' },
+                { value: 'Arial, sans-serif', label: 'Arial' },
+                { value: 'Georgia, serif', label: 'Georgia' },
+                { value: 'Times New Roman, serif', label: 'Times New Roman' },
+                { value: 'Courier New, monospace', label: 'Courier New' }
+            ]
+        });
+    </script>
+</body>
+</html>
+```
+
+#### Font File Formats
+
+| Format | Extension | Browser Support | Recommendation |
+|--------|-----------|-----------------|----------------|
+| WOFF2 | .woff2 | Modern browsers | ✅ Best (smallest size) |
+| WOFF | .woff | All browsers | ✅ Good fallback |
+| TrueType | .ttf | All browsers | ⚠️ Larger file size |
+| OpenType | .otf | All browsers | ⚠️ Larger file size |
+
+**Best Practice:** Use WOFF2 as primary with WOFF as fallback for optimal performance and compatibility.
+
+#### Multiple Custom Fonts Example
+
+```html
+<style>
+    /* Font 1: Brand Font */
+    @font-face {
+        font-family: 'BrandFont';
+        src: url('fonts/BrandFont.woff2') format('woff2'),
+             url('fonts/BrandFont.woff') format('woff');
+    }
+    
+    /* Font 2: Heading Font */
+    @font-face {
+        font-family: 'HeadingFont';
+        src: url('fonts/HeadingFont.woff2') format('woff2'),
+             url('fonts/HeadingFont.woff') format('woff');
+    }
+    
+    /* Font 3: Code Font */
+    @font-face {
+        font-family: 'CodeFont';
+        src: url('fonts/CodeFont.woff2') format('woff2'),
+             url('fonts/CodeFont.woff') format('woff');
+    }
+</style>
+
+<script>
+    const editor = new RichEditor('#editor', {
+        defaultFontFamily: 'BrandFont, sans-serif',
+        fontFamilies: [
+            { value: 'BrandFont, sans-serif', label: 'Brand Font' },
+            { value: 'HeadingFont, serif', label: 'Heading Font' },
+            { value: 'CodeFont, monospace', label: 'Code Font' },
+            { value: 'Arial, sans-serif', label: 'Arial' },
+            { value: 'Georgia, serif', label: 'Georgia' }
+        ]
+    });
+</script>
+```
+
+#### Folder Structure Example
+
+```
+your-project/
+├── index.html
+├── richeditor.js
+└── fonts/
+    ├── MyCustomFont.woff2
+    ├── MyCustomFont.woff
+    ├── MyCustomFont.ttf
+    ├── MyCustomFont-Bold.woff2
+    ├── MyCustomFont-Bold.woff
+    └── MyCustomFont-Italic.woff2
 ```
 
 ---
