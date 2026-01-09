@@ -1,192 +1,113 @@
-# 🖊️ RichEditor
+# RichEditor
 
-A free, open-source WYSIWYG (What You See Is What You Get) rich text editor similar to TinyMCE - built with vanilla JavaScript, no dependencies required.
+A full-featured, lightweight WYSIWYG rich text editor for web applications. Free and open-source alternative to commercial editors.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen.svg)
+## Table of Contents
 
----
-
-## ✨ Features
-
-- 📝 **Rich Text Formatting** - Bold, italic, underline, strikethrough, subscript, superscript
-- 🎨 **TinyMCE-Style Menu Bar** - Edit, Insert, Format, Table menus
-- 🔤 **15+ Font Families** - Arial, Georgia, Times New Roman, Comic Sans MS, and more
-- 📏 **7 Font Sizes** - From 8pt to 36pt
-- ↕️ **Line Height Control** - Adjustable line spacing (1, 1.15, 1.5, 2, 2.5, 3)
-- 🎨 **Text & Background Colors** - Full color palette with custom color picker
-- 📋 **Lists** - Ordered and unordered lists
-- ↔️ **Text Alignment** - Left, center, right, justify
-- 🔗 **Links & Media** - Insert links, images, and embed videos
-- 📊 **Table Support** - Create and manage tables with row/column controls
-- 💻 **Code Blocks** - Syntax-highlighted code blocks and inline code
-- ↩️ **Undo/Redo** - Full history support
-- 📄 **Source Code View** - View and edit raw HTML
-- 🖥️ **Fullscreen Mode** - Distraction-free editing
-- 🖨️ **Print Support** - Print editor content directly
-- 🔌 **Plugin Architecture** - Extend functionality with plugins
-- ⚙️ **Customizable Toolbar** - Show/hide any toolbar button
-- 🔧 **Feature Toggles** - Enable/disable specific features
-- 💾 **Auto-Save** - Automatic content saving
-- 🔄 **RTL Support** - Right-to-left language support
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration Options](#configuration-options)
+- [API Methods](#api-methods)
+- [Events](#events)
+- [Toolbar Customization](#toolbar-customization)
+- [Themes](#themes)
+- [Plugins](#plugins)
 
 ---
 
-## 📦 Installation
+## Installation
 
-### Option 1: Direct Download
-Download `richeditor.js` and include it in your HTML:
+Include the RichEditor script in your HTML:
 
 ```html
 <script src="richeditor.js"></script>
 ```
 
-### Option 2: CDN (Coming Soon)
+---
+
+## Quick Start
+
 ```html
-<script src="https://cdn.example.com/richeditor/1.0.0/richeditor.min.js"></script>
+<textarea id="editor"></textarea>
+
+<script>
+const editor = new RichEditor('#editor', {
+    height: 400,
+    placeholder: 'Start typing...'
+});
+</script>
 ```
 
 ---
 
-## 🚀 Quick Start
+## Configuration Options
 
-### Basic Usage
+### Editor Dimensions
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Editor</title>
-</head>
-<body>
-    <div id="editor"></div>
-    
-    <script src="richeditor.js"></script>
-    <script>
-        const editor = new RichEditor('#editor');
-    </script>
-</body>
-</html>
-```
-
-### With Options
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `height` | `number` | `400` | Editor height in pixels |
+| `minHeight` | `number` | `200` | Minimum height in pixels |
+| `maxHeight` | `number\|null` | `null` | Maximum height (`null` = no limit) |
+| `width` | `string\|number` | `'100%'` | Editor width (CSS value or pixels) |
 
 ```javascript
-const editor = new RichEditor('#editor', {
-    height: 400,
-    placeholder: 'Start writing...',
-    showMenuBar: true,
-    initialContent: '<p>Hello World!</p>'
+new RichEditor('#editor', {
+    height: 500,
+    minHeight: 300,
+    maxHeight: 800,
+    width: '100%'
 });
 ```
 
 ---
 
-## ⚙️ Configuration Options
+### Content & State
 
-### Editor Settings
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `height` | Number/String | `400` | Editor height in pixels or CSS value |
-| `minHeight` | Number | `200` | Minimum height in pixels |
-| `maxHeight` | Number | `null` | Maximum height in pixels |
-| `width` | Number/String | `'100%'` | Editor width in pixels or CSS value |
-| `placeholder` | String | `'Start typing...'` | Placeholder text |
-| `initialContent` | String | `''` | Initial HTML content |
-| `showMenuBar` | Boolean | `true` | Show/hide TinyMCE-style menu bar |
-| `spellcheck` | Boolean | `true` | Enable browser spellcheck |
-| `rtl` | Boolean | `false` | Right-to-left mode |
-
-### Example
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `placeholder` | `string` | `'Start typing...'` | Placeholder text when editor is empty |
+| `initialContent` | `string` | `''` | Initial HTML content |
+| `disabled` | `boolean` | `false` | Start editor in read-only mode |
+| `rtl` | `boolean` | `false` | Right-to-left text direction |
+| `spellcheck` | `boolean` | `true` | Enable browser spell checking |
 
 ```javascript
-const editor = new RichEditor('#editor', {
-    height: 500,
-    minHeight: 300,
-    maxHeight: 800,
-    width: '100%',
+new RichEditor('#editor', {
     placeholder: 'Write your content here...',
-    showMenuBar: true,
+    initialContent: '<p>Hello World!</p>',
+    disabled: false,
+    rtl: false,
     spellcheck: true
 });
 ```
 
 ---
 
-## 🔧 Feature Toggles
+### Feature Toggles
 
-You can enable or disable specific features using these options:
+Enable or disable specific editor features:
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `enableLinks` | `true` | Enable/disable link insertion |
-| `enableImages` | `true` | Enable/disable image insertion |
-| `enableVideos` | `true` | Enable/disable video embedding |
-| `enableTables` | `true` | Enable/disable table creation |
-| `enableColors` | `true` | Enable/disable text & background colors |
-| `enableLists` | `true` | Enable/disable ordered & unordered lists |
-| `enableAlignment` | `true` | Enable/disable text alignment buttons |
-| `enableIndent` | `true` | Enable/disable indent/outdent |
-| `enableHeadings` | `true` | Enable/disable heading formats (H1-H6) |
-| `enableFonts` | `true` | Enable/disable font family selector |
-| `enableFontSizes` | `true` | Enable/disable font size selector |
-| `enableLineHeight` | `true` | Enable/disable line height control |
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `enableLinks` | `boolean` | `true` | Enable link insertion |
+| `enableImages` | `boolean` | `true` | Enable image insertion |
+| `enableVideos` | `boolean` | `true` | Enable video embedding |
+| `enableTables` | `boolean` | `true` | Enable table insertion |
+| `enableColors` | `boolean` | `true` | Enable text/background colors |
+| `enableLists` | `boolean` | `true` | Enable ordered/unordered lists |
+| `enableAlignment` | `boolean` | `true` | Enable text alignment |
+| `enableIndent` | `boolean` | `true` | Enable indent/outdent |
+| `enableHeadings` | `boolean` | `true` | Enable heading formats |
+| `enableFonts` | `boolean` | `true` | Enable font family selection |
+| `enableFontSizes` | `boolean` | `true` | Enable font size selection |
+| `enableLineHeight` | `boolean` | `true` | Enable line height selection |
 
-### Examples
-
-#### Disable Links and Media
 ```javascript
-const editor = new RichEditor('#editor', {
-    enableLinks: false,
-    enableImages: false,
-    enableVideos: false
-});
-```
-
-#### Disable Tables
-```javascript
-const editor = new RichEditor('#editor', {
-    enableTables: false
-});
-```
-
-#### Simple Text Editor (No Media, No Tables)
-```javascript
-const editor = new RichEditor('#editor', {
-    enableLinks: false,
-    enableImages: false,
-    enableVideos: false,
-    enableTables: false,
-    showMenuBar: false
-});
-```
-
-#### Basic Formatting Only
-```javascript
-const editor = new RichEditor('#editor', {
-    enableLinks: false,
-    enableImages: false,
-    enableVideos: false,
-    enableTables: false,
-    enableColors: false,
-    enableFonts: false,
-    enableFontSizes: false,
-    enableLineHeight: false,
-    enableHeadings: false,
-    showMenuBar: false
-});
-```
-
-#### Full Featured (All Options Enabled)
-```javascript
-const editor = new RichEditor('#editor', {
-    height: 500,
-    showMenuBar: true,
+new RichEditor('#editor', {
     enableLinks: true,
     enableImages: true,
-    enableVideos: true,
+    enableVideos: false,      // Disable video embedding
     enableTables: true,
     enableColors: true,
     enableLists: true,
@@ -201,349 +122,363 @@ const editor = new RichEditor('#editor', {
 
 ---
 
-## 🔤 Font Configuration
+### UI Options
 
-### Default Font Settings
-
-Set the default font family, size, and line height for the editor:
-
-```javascript
-const editor = new RichEditor('#editor', {
-    defaultFontFamily: 'Georgia, serif',
-    defaultFontSize: '18pt',
-    defaultLineHeight: '1.6'
-});
-```
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `defaultFontFamily` | String | `'Arial, sans-serif'` | Default font for the editor |
-| `defaultFontSize` | String | `'14pt'` | Default font size in pt (points) |
-| `defaultLineHeight` | String | `'1.5'` | Default line height |
-
-### Adding Custom Fonts
-
-You can customize the font dropdown by providing your own `fontFamilies` array:
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `showMenuBar` | `boolean` | `true` | Show the menu bar (Edit, Insert, Format, Table) |
+| `showWordCount` | `boolean` | `true` | Show word/character count in status bar |
+| `showHtmlCount` | `boolean` | `true` | Show HTML character count in status bar |
+| `theme` | `string` | `'light'` | Theme: `'light'` or `'dark'` |
 
 ```javascript
-const editor = new RichEditor('#editor', {
-    fontFamilies: [
-        { value: 'Arial, sans-serif', label: 'Arial' },
-        { value: 'Georgia, serif', label: 'Georgia' },
-        { value: 'Times New Roman, serif', label: 'Times New Roman' },
-        // Add your custom fonts
-        { value: 'Roboto, sans-serif', label: 'Roboto' },
-        { value: 'Open Sans, sans-serif', label: 'Open Sans' },
-        { value: 'Lato, sans-serif', label: 'Lato' },
-        { value: 'Montserrat, sans-serif', label: 'Montserrat' },
-        { value: 'Poppins, sans-serif', label: 'Poppins' }
-    ]
+new RichEditor('#editor', {
+    showMenuBar: true,
+    showWordCount: true,
+    showHtmlCount: true,
+    theme: 'light'
 });
-```
-
-### Using Google Fonts
-
-To use Google Fonts, first include the font in your HTML, then add it to the `fontFamilies` array:
-
-**Step 1: Include Google Font in HTML**
-```html
-<head>
-    <!-- Add Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-</head>
-```
-
-**Step 2: Add to fontFamilies**
-```javascript
-const editor = new RichEditor('#editor', {
-    defaultFontFamily: 'Roboto, sans-serif',
-    fontFamilies: [
-        // System fonts
-        { value: 'Arial, sans-serif', label: 'Arial' },
-        { value: 'Georgia, serif', label: 'Georgia' },
-        { value: 'Times New Roman, serif', label: 'Times New Roman' },
-        { value: 'Courier New, monospace', label: 'Courier New' },
-        
-        // Google Fonts
-        { value: 'Roboto, sans-serif', label: 'Roboto' },
-        { value: 'Open Sans, sans-serif', label: 'Open Sans' },
-        { value: 'Poppins, sans-serif', label: 'Poppins' },
-        { value: 'Lato, sans-serif', label: 'Lato' },
-        { value: 'Montserrat, sans-serif', label: 'Montserrat' },
-        { value: 'Playfair Display, serif', label: 'Playfair Display' },
-        { value: 'Merriweather, serif', label: 'Merriweather' },
-        { value: 'Source Code Pro, monospace', label: 'Source Code Pro' }
-    ]
-});
-```
-
-### Custom Font Sizes
-
-Customize the available font sizes (use `pt` for consistency):
-
-```javascript
-const editor = new RichEditor('#editor', {
-    fontSizes: [
-        { value: '8pt', label: '8pt' },
-        { value: '9pt', label: '9pt' },
-        { value: '10pt', label: '10pt' },
-        { value: '11pt', label: '11pt' },
-        { value: '12pt', label: '12pt' },
-        { value: '14pt', label: '14pt' },
-        { value: '16pt', label: '16pt' },
-        { value: '18pt', label: '18pt' },
-        { value: '24pt', label: '24pt' },
-        { value: '36pt', label: '36pt' }
-    ]
-});
-```
-
-### Custom Line Heights
-
-Customize the available line heights:
-
-```javascript
-const editor = new RichEditor('#editor', {
-    lineHeights: [
-        { value: '1', label: 'Single' },
-        { value: '1.15', label: '1.15' },
-        { value: '1.5', label: '1.5' },
-        { value: '1.75', label: '1.75' },
-        { value: '2', label: 'Double' },
-        { value: '2.5', label: '2.5' },
-        { value: '3', label: 'Triple' }
-    ]
-});
-```
-
-### Complete Font Configuration Example
-
-```javascript
-const editor = new RichEditor('#editor', {
-    // Set defaults
-    defaultFontFamily: 'Roboto, sans-serif',
-    defaultFontSize: '14pt',
-    defaultLineHeight: '1.6',
-    
-    // Custom font families
-    fontFamilies: [
-        { value: 'Roboto, sans-serif', label: 'Roboto' },
-        { value: 'Open Sans, sans-serif', label: 'Open Sans' },
-        { value: 'Lato, sans-serif', label: 'Lato' },
-        { value: 'Georgia, serif', label: 'Georgia' },
-        { value: 'Arial, sans-serif', label: 'Arial' }
-    ],
-    
-    // Custom font sizes (in pt)
-    fontSizes: [
-        { value: '8pt', label: '8pt' },
-        { value: '10pt', label: '10pt' },
-        { value: '12pt', label: '12pt' },
-        { value: '14pt', label: '14pt' },
-        { value: '18pt', label: '18pt' },
-        { value: '24pt', label: '24pt' },
-        { value: '36pt', label: '36pt' }
-    ],
-    
-    // Custom line heights
-    lineHeights: [
-        { value: '1', label: 'Tight' },
-        { value: '1.5', label: 'Normal' },
-        { value: '2', label: 'Relaxed' }
-    ]
-});
-```
-
-### Default Font Families (Built-in)
-
-RichEditor comes with 15 built-in fonts:
-
-| Font Family | Type |
-|-------------|------|
-| Andale Mono | Monospace |
-| Arial | Sans-serif |
-| Arial Black | Sans-serif |
-| Book Antiqua | Serif |
-| Comic Sans MS | Cursive |
-| Courier New | Monospace |
-| Georgia | Serif |
-| Helvetica | Sans-serif |
-| Impact | Sans-serif |
-| Symbol | Symbol |
-| Tahoma | Sans-serif |
-| Terminal | Monospace |
-| Times New Roman | Serif |
-| Trebuchet MS | Sans-serif |
-| Verdana | Sans-serif |
-
-### Using Custom Font Files (.ttf, .woff, .woff2, .otf)
-
-If you have your own font files, you can add them to the editor in two steps:
-
-#### Step 1: Load the Font with CSS @font-face
-
-Add the `@font-face` rule in your HTML or CSS file:
-
-```html
-<style>
-    @font-face {
-        font-family: 'MyCustomFont';
-        src: url('fonts/MyCustomFont.woff2') format('woff2'),
-             url('fonts/MyCustomFont.woff') format('woff'),
-             url('fonts/MyCustomFont.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
-    
-    /* If you have bold version */
-    @font-face {
-        font-family: 'MyCustomFont';
-        src: url('fonts/MyCustomFont-Bold.woff2') format('woff2'),
-             url('fonts/MyCustomFont-Bold.woff') format('woff'),
-             url('fonts/MyCustomFont-Bold.ttf') format('truetype');
-        font-weight: bold;
-        font-style: normal;
-    }
-    
-    /* If you have italic version */
-    @font-face {
-        font-family: 'MyCustomFont';
-        src: url('fonts/MyCustomFont-Italic.woff2') format('woff2'),
-             url('fonts/MyCustomFont-Italic.woff') format('woff'),
-             url('fonts/MyCustomFont-Italic.ttf') format('truetype');
-        font-weight: normal;
-        font-style: italic;
-    }
-</style>
-```
-
-#### Step 2: Add to Editor Configuration
-
-```javascript
-const editor = new RichEditor('#editor', {
-    // Set as default font (optional)
-    defaultFontFamily: 'MyCustomFont, sans-serif',
-    
-    // Add to font dropdown
-    fontFamilies: [
-        { value: 'MyCustomFont, sans-serif', label: 'My Custom Font' },
-        { value: 'Arial, sans-serif', label: 'Arial' },
-        { value: 'Georgia, serif', label: 'Georgia' },
-        { value: 'Times New Roman, serif', label: 'Times New Roman' },
-        { value: 'Courier New, monospace', label: 'Courier New' }
-    ]
-});
-```
-
-#### Complete Example with Custom Font File
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Editor with Custom Font</title>
-    
-    <!-- Load custom font file -->
-    <style>
-        @font-face {
-            font-family: 'MyCustomFont';
-            src: url('fonts/MyCustomFont.woff2') format('woff2'),
-                 url('fonts/MyCustomFont.woff') format('woff'),
-                 url('fonts/MyCustomFont.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-    </style>
-</head>
-<body>
-    <div id="editor"></div>
-    
-    <script src="richeditor.js"></script>
-    <script>
-        const editor = new RichEditor('#editor', {
-            defaultFontFamily: 'MyCustomFont, sans-serif',
-            fontFamilies: [
-                { value: 'MyCustomFont, sans-serif', label: 'My Custom Font' },
-                { value: 'Arial, sans-serif', label: 'Arial' },
-                { value: 'Georgia, serif', label: 'Georgia' },
-                { value: 'Times New Roman, serif', label: 'Times New Roman' },
-                { value: 'Courier New, monospace', label: 'Courier New' }
-            ]
-        });
-    </script>
-</body>
-</html>
-```
-
-#### Font File Formats
-
-| Format | Extension | Browser Support | Recommendation |
-|--------|-----------|-----------------|----------------|
-| WOFF2 | .woff2 | Modern browsers | ✅ Best (smallest size) |
-| WOFF | .woff | All browsers | ✅ Good fallback |
-| TrueType | .ttf | All browsers | ⚠️ Larger file size |
-| OpenType | .otf | All browsers | ⚠️ Larger file size |
-
-**Best Practice:** Use WOFF2 as primary with WOFF as fallback for optimal performance and compatibility.
-
-#### Multiple Custom Fonts Example
-
-```html
-<style>
-    /* Font 1: Brand Font */
-    @font-face {
-        font-family: 'BrandFont';
-        src: url('fonts/BrandFont.woff2') format('woff2'),
-             url('fonts/BrandFont.woff') format('woff');
-    }
-    
-    /* Font 2: Heading Font */
-    @font-face {
-        font-family: 'HeadingFont';
-        src: url('fonts/HeadingFont.woff2') format('woff2'),
-             url('fonts/HeadingFont.woff') format('woff');
-    }
-    
-    /* Font 3: Code Font */
-    @font-face {
-        font-family: 'CodeFont';
-        src: url('fonts/CodeFont.woff2') format('woff2'),
-             url('fonts/CodeFont.woff') format('woff');
-    }
-</style>
-
-<script>
-    const editor = new RichEditor('#editor', {
-        defaultFontFamily: 'BrandFont, sans-serif',
-        fontFamilies: [
-            { value: 'BrandFont, sans-serif', label: 'Brand Font' },
-            { value: 'HeadingFont, serif', label: 'Heading Font' },
-            { value: 'CodeFont, monospace', label: 'Code Font' },
-            { value: 'Arial, sans-serif', label: 'Arial' },
-            { value: 'Georgia, serif', label: 'Georgia' }
-        ]
-    });
-</script>
-```
-
-#### Folder Structure Example
-
-```
-your-project/
-├── index.html
-├── richeditor.js
-└── fonts/
-    ├── MyCustomFont.woff2
-    ├── MyCustomFont.woff
-    ├── MyCustomFont.ttf
-    ├── MyCustomFont-Bold.woff2
-    ├── MyCustomFont-Bold.woff
-    └── MyCustomFont-Italic.woff2
 ```
 
 ---
 
-## 📚 API Methods
+### Character Limit
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `maxCharacters` | `number` | `10000` | Maximum character limit (`0` = no limit) |
+
+When enabled:
+- Displays "Characters: X of Y" in status bar
+- Shows orange warning at 90% capacity
+- Shows red warning at 100% capacity
+- Blocks typing when limit reached
+- Truncates pasted content that exceeds limit
+
+```javascript
+new RichEditor('#editor', {
+    maxCharacters: 5000    // Limit to 5000 characters
+});
+
+// No limit
+new RichEditor('#editor', {
+    maxCharacters: 0
+});
+```
+
+---
+
+### Paste Mode
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `pasteMode` | `string` | `'plainText'` | Paste behavior mode |
+
+**Values:**
+- `'plainText'` - Always paste as plain text (default)
+- `'formattedAndPlainText'` - Show dialog to choose between formatted or plain text
+
+```javascript
+// Always paste as plain text (default)
+new RichEditor('#editor', {
+    pasteMode: 'plainText'
+});
+
+// Show paste options dialog
+new RichEditor('#editor', {
+    pasteMode: 'formattedAndPlainText'
+});
+```
+
+---
+
+### Paste Settings
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `pasteSettings.cleanPaste` | `boolean` | `true` | Clean pasted content |
+| `pasteSettings.keepStructure` | `boolean` | `true` | Keep document structure when pasting formatted |
+
+```javascript
+new RichEditor('#editor', {
+    pasteMode: 'formattedAndPlainText',
+    pasteSettings: {
+        cleanPaste: true,
+        keepStructure: true
+    }
+});
+```
+
+---
+
+### Default Styles
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `defaultColor` | `string` | `'#000000'` | Default text color |
+| `defaultFontFamily` | `string` | `'Arial, sans-serif'` | Default font family |
+| `defaultFontSize` | `string` | `'14pt'` | Default font size |
+| `defaultLineHeight` | `string` | `'1.5'` | Default line height |
+| `enforceInlineStyles` | `boolean` | `true` | Apply inline styles to all elements |
+
+```javascript
+new RichEditor('#editor', {
+    defaultColor: '#333333',
+    defaultFontFamily: 'Georgia, serif',
+    defaultFontSize: '12pt',
+    defaultLineHeight: '1.6',
+    enforceInlineStyles: true
+});
+```
+
+---
+
+### Font Families
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `fontFamilies` | `array` | See below | Available font families |
+
+**Default fonts:**
+- Andale Mono
+- Arial
+- Arial Black
+- Book Antiqua
+- Comic Sans MS
+- Courier New
+- Georgia
+- Helvetica
+- Impact
+- Symbol
+- Tahoma
+- Terminal
+- Times New Roman
+- Trebuchet MS
+- Verdana
+
+```javascript
+new RichEditor('#editor', {
+    fontFamilies: [
+        { value: 'Arial, sans-serif', label: 'Arial' },
+        { value: 'Georgia, serif', label: 'Georgia' },
+        { value: 'Courier New, monospace', label: 'Courier New' },
+        // Add custom fonts
+        { value: 'Roboto, sans-serif', label: 'Roboto' }
+    ]
+});
+```
+
+---
+
+### Font Sizes
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `fontSizes` | `array` | See below | Available font sizes |
+
+**Default sizes:** 8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt
+
+```javascript
+new RichEditor('#editor', {
+    fontSizes: [
+        { value: '10pt', label: '10pt' },
+        { value: '12pt', label: '12pt' },
+        { value: '14pt', label: '14pt' },
+        { value: '16pt', label: '16pt' },
+        { value: '18pt', label: '18pt' },
+        { value: '24pt', label: '24pt' }
+    ]
+});
+```
+
+---
+
+### Line Heights
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `lineHeights` | `array` | See below | Available line heights |
+
+**Default values:** 1, 1.15, 1.5, 2, 2.5, 3
+
+```javascript
+new RichEditor('#editor', {
+    lineHeights: [
+        { value: '1', label: 'Single' },
+        { value: '1.5', label: '1.5' },
+        { value: '2', label: 'Double' }
+    ]
+});
+```
+
+---
+
+### Color Palette
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `colorPalette` | `array` | 80 colors | Available colors for text/background |
+
+```javascript
+new RichEditor('#editor', {
+    colorPalette: [
+        '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff',
+        '#ffff00', '#ff00ff', '#00ffff', '#808080', '#c0c0c0'
+    ]
+});
+```
+
+---
+
+### Table Defaults
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `tableDefaults.rows` | `number` | `3` | Default number of rows |
+| `tableDefaults.cols` | `number` | `3` | Default number of columns |
+| `tableDefaults.width` | `string` | `'100%'` | Default table width |
+| `tableDefaults.border` | `string` | `'1px solid #ccc'` | Default border style |
+
+```javascript
+new RichEditor('#editor', {
+    tableDefaults: {
+        rows: 4,
+        cols: 4,
+        width: '100%',
+        border: '1px solid #ddd'
+    }
+});
+```
+
+---
+
+### Image Upload
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `imageUpload.enabled` | `boolean` | `true` | Enable image uploads |
+| `imageUpload.maxSize` | `number` | `10485760` | Max file size in bytes (10MB) |
+| `imageUpload.allowedTypes` | `array` | `['image/jpeg', 'image/png', 'image/gif', 'image/webp']` | Allowed MIME types |
+| `imageUpload.handler` | `function\|null` | `null` | Custom upload handler |
+
+```javascript
+new RichEditor('#editor', {
+    imageUpload: {
+        enabled: true,
+        maxSize: 5 * 1024 * 1024,  // 5MB
+        allowedTypes: ['image/jpeg', 'image/png'],
+        handler: async (file, callback) => {
+            // Upload to your server
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            callback(data.url);  // Pass the image URL back
+        }
+    }
+});
+```
+
+---
+
+### Auto-Save
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `autoSave.enabled` | `boolean` | `false` | Enable auto-save |
+| `autoSave.interval` | `number` | `30000` | Save interval in milliseconds |
+| `autoSave.key` | `string` | `'richeditor_autosave'` | LocalStorage key |
+
+```javascript
+new RichEditor('#editor', {
+    autoSave: {
+        enabled: true,
+        interval: 60000,  // Save every minute
+        key: 'my_editor_content'
+    }
+});
+```
+
+---
+
+### Format Options
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `formatBlockOptions` | `array` | Block format options for toolbar dropdown |
+| `blockFormatOptions` | `array` | Block format options for menu |
+| `inlineFormatOptions` | `array` | Inline format options |
+| `alignOptions` | `array` | Text alignment options |
+
+```javascript
+new RichEditor('#editor', {
+    formatBlockOptions: [
+        { value: 'p', label: 'Paragraph' },
+        { value: 'h1', label: 'Heading 1' },
+        { value: 'h2', label: 'Heading 2' },
+        { value: 'h3', label: 'Heading 3' },
+        { value: 'pre', label: 'Preformatted' }
+    ]
+});
+```
+
+---
+
+### Custom CSS
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `customCSS` | `string` | `''` | Custom CSS to inject into editor |
+
+```javascript
+new RichEditor('#editor', {
+    customCSS: `
+        .richeditor-content {
+            font-family: 'My Custom Font', sans-serif;
+        }
+        .richeditor-content h1 {
+            color: #0066cc;
+        }
+    `
+});
+```
+
+---
+
+### Allowed Tags (Sanitization)
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `allowedTags` | `array\|null` | `null` | Allowed HTML tags (`null` = use defaults) |
+
+```javascript
+new RichEditor('#editor', {
+    allowedTags: ['p', 'br', 'strong', 'em', 'a', 'ul', 'ol', 'li']
+});
+```
+
+---
+
+### Plugins
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `plugins` | `array` | `[]` | Array of plugin classes to load |
+
+```javascript
+new RichEditor('#editor', {
+    plugins: [EmojiPlugin, WordCountPlugin]
+});
+```
+
+---
+
+## API Methods
 
 ### Content Methods
 
@@ -551,25 +486,44 @@ your-project/
 // Get HTML content
 const html = editor.getContent();
 
-// Get plain text (no HTML tags)
+// Set HTML content
+editor.setContent('<p>Hello World!</p>');
+
+// Get plain text (no HTML)
 const text = editor.getText();
 
-// Set content
-editor.setContent('<p>New content</p>');
-
 // Insert content at cursor position
-editor.insertContent('<strong>Inserted text</strong>');
+editor.insertContent('<strong>Bold text</strong>');
 
 // Clear all content
-editor.clearContent();
+editor.clear();
+
+// Check if editor is empty
+const isEmpty = editor.isEmpty();
 ```
 
 ### Editor State
 
 ```javascript
-// Check if content is empty
-const isEmpty = editor.isEmpty();
+// Enable editor
+editor.enable();
 
+// Disable editor (read-only mode with banner)
+editor.disable();
+
+// Check if disabled
+const isDisabled = editor.isDisabled();
+
+// Focus editor
+editor.focus();
+
+// Blur editor
+editor.blur();
+```
+
+### Counts
+
+```javascript
 // Get word count
 const words = editor.getWordCount();
 
@@ -577,130 +531,125 @@ const words = editor.getWordCount();
 const chars = editor.getCharCount();
 ```
 
-### Editor Controls
+### Paste Mode
 
 ```javascript
-// Enable/disable editor
-editor.enable();
-editor.disable();
+// Set paste mode
+editor.setPasteMode('plainText');
+editor.setPasteMode('formattedAndPlainText');
 
-// Focus the editor
-editor.focus();
+// Get current paste mode
+const mode = editor.getPasteMode();
+```
 
-// Undo/Redo
+### Theme
+
+```javascript
+// Change theme
+editor.setTheme('dark');
+editor.setTheme('light');
+```
+
+### Commands
+
+```javascript
+// Execute formatting command
+editor.execCommand('bold');
+editor.execCommand('italic');
+editor.execCommand('underline');
+editor.execCommand('formatBlock', 'h1');
+editor.execCommand('fontSize', '18pt');
+```
+
+### Undo/Redo
+
+```javascript
+// Undo last action
 editor.undo();
+
+// Redo last undone action
 editor.redo();
 ```
 
-### View Modes
+### Custom Toolbar Buttons
 
 ```javascript
-// Toggle fullscreen
-editor.toggleFullscreen();
-
-// Toggle source code view
-editor.toggleSourceView();
-
-// Print content
-editor.print();
+editor.addToolbarButton('myButton', {
+    icon: '⭐',
+    title: 'My Custom Button',
+    action: 'myAction'
+});
 ```
 
 ### Destroy
 
 ```javascript
-// Remove editor and clean up
+// Destroy editor instance
 editor.destroy();
 ```
 
 ---
 
-## 🎯 Events
+## Events
+
+Register event handlers in configuration:
 
 ```javascript
-const editor = new RichEditor('#editor', {
-    onChange: (data) => {
-        console.log('Content changed:', data.content);
-    },
-    onFocus: () => {
-        console.log('Editor focused');
-    },
-    onBlur: () => {
-        console.log('Editor blurred');
-    },
-    onKeydown: (data) => {
-        console.log('Key pressed:', data.event.key);
-    },
-    onKeyup: (data) => {
-        console.log('Key released:', data.event.key);
-    },
-    onImageUpload: (data) => {
-        console.log('Image uploaded:', data.file);
+new RichEditor('#editor', {
+    events: {
+        onChange: (data) => {
+            console.log('Content changed:', data.content);
+        },
+        onFocus: () => {
+            console.log('Editor focused');
+        },
+        onBlur: () => {
+            console.log('Editor blurred');
+        },
+        onInit: (data) => {
+            console.log('Editor initialized:', data.editor);
+        },
+        onImageUpload: (data) => {
+            console.log('Image uploaded:', data.url);
+        },
+        onPaste: (data) => {
+            console.log('Content pasted:', data);
+        },
+        onKeydown: (event) => {
+            console.log('Key pressed:', event.key);
+        },
+        onKeyup: (event) => {
+            console.log('Key released:', event.key);
+        },
+        onPasteModeChange: (data) => {
+            console.log('Paste mode changed:', data.mode);
+        }
     }
 });
 ```
 
 ---
 
-## 🔌 Plugins
+## Toolbar Customization
 
-RichEditor comes with built-in plugins:
-
-### Word Count Plugin
-```javascript
-const editor = new RichEditor('#editor', {
-    plugins: [RichEditorPlugins.WordCount]
-});
-```
-
-### Find & Replace Plugin
-```javascript
-const editor = new RichEditor('#editor', {
-    plugins: [RichEditorPlugins.FindReplace]
-});
-```
-
-### Emoji Plugin
-```javascript
-const editor = new RichEditor('#editor', {
-    plugins: [RichEditorPlugins.Emoji]
-});
-```
-
-### Special Characters Plugin
-```javascript
-const editor = new RichEditor('#editor', {
-    plugins: [RichEditorPlugins.SpecialChars]
-});
-```
-
-### Multiple Plugins
-```javascript
-const editor = new RichEditor('#editor', {
-    plugins: [
-        RichEditorPlugins.WordCount,
-        RichEditorPlugins.FindReplace,
-        RichEditorPlugins.Emoji,
-        RichEditorPlugins.SpecialChars
-    ]
-});
-```
-
----
-
-## 🎨 Custom Toolbar
-
-You can customize the toolbar by specifying which buttons to show:
+### Default Toolbar
 
 ```javascript
-const editor = new RichEditor('#editor', {
-    toolbar: [
-        ['undo', 'redo'],
-        ['bold', 'italic', 'underline'],
-        ['alignLeft', 'alignCenter', 'alignRight'],
-        ['link', 'image'],
-        ['sourceCode', 'fullscreen']
-    ]
-});
+toolbar: [
+    ['undo', 'redo'],
+    ['formatBlock', 'fontFamily', 'fontSize'],
+    ['bold', 'italic', 'underline', 'strikethrough'],
+    ['subscript', 'superscript'],
+    ['fontColor', 'backgroundColor'],
+    ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify'],
+    ['lineHeight'],
+    ['orderedList', 'unorderedList'],
+    ['indent', 'outdent'],
+    ['link', 'unlink', 'image', 'video', 'table'],
+    ['codeBlock', 'horizontalRule'],
+    ['removeFormat', 'clearFormatting'],
+    ['sourceCode', 'fullscreen', 'print']
+]
 ```
 
 ### Available Toolbar Buttons
@@ -713,8 +662,8 @@ const editor = new RichEditor('#editor', {
 | `italic` | Italic text |
 | `underline` | Underline text |
 | `strikethrough` | Strikethrough text |
-| `subscript` | Subscript text |
-| `superscript` | Superscript text |
+| `subscript` | Subscript |
+| `superscript` | Superscript |
 | `alignLeft` | Align left |
 | `alignCenter` | Align center |
 | `alignRight` | Align right |
@@ -728,138 +677,225 @@ const editor = new RichEditor('#editor', {
 | `image` | Insert image |
 | `video` | Insert video |
 | `table` | Insert table |
-| `horizontalRule` | Insert horizontal line |
-| `blockquote` | Block quote |
+| `horizontalRule` | Horizontal line |
 | `codeBlock` | Code block |
-| `fontColor` | Text color |
-| `backgroundColor` | Background color |
 | `removeFormat` | Remove formatting |
 | `clearFormatting` | Clear all formatting |
+| `fontColor` | Text color |
+| `backgroundColor` | Background color |
 | `sourceCode` | View/edit source |
-| `fullscreen` | Fullscreen mode |
+| `fullscreen` | Toggle fullscreen |
 | `print` | Print content |
-| `formatBlock` | Heading/paragraph dropdown |
+| `formatBlock` | Block format dropdown |
 | `fontFamily` | Font family dropdown |
 | `fontSize` | Font size dropdown |
 | `lineHeight` | Line height dropdown |
 
+### Custom Toolbar Configuration
+
+```javascript
+new RichEditor('#editor', {
+    toolbar: [
+        ['undo', 'redo'],
+        ['bold', 'italic', 'underline'],
+        ['alignLeft', 'alignCenter', 'alignRight'],
+        ['link', 'image'],
+        ['sourceCode']
+    ]
+});
+```
+
 ---
 
-## 💾 Auto-Save
+## Themes
 
-Enable auto-save to automatically save content to localStorage:
+### Light Theme (Default)
+
+```javascript
+new RichEditor('#editor', {
+    theme: 'light'
+});
+```
+
+### Dark Theme
+
+```javascript
+new RichEditor('#editor', {
+    theme: 'dark'
+});
+```
+
+### Change Theme at Runtime
+
+```javascript
+editor.setTheme('dark');
+```
+
+---
+
+## Plugins
+
+### Built-in Plugins
+
+- **EmojiPlugin** - Emoji picker
+- **WordCountPlugin** - Enhanced word statistics dialog
+
+### Using Plugins
+
+```javascript
+new RichEditor('#editor', {
+    plugins: [RichEditor.EmojiPlugin, RichEditor.WordCountPlugin]
+});
+```
+
+### Creating Custom Plugins
+
+```javascript
+class MyPlugin extends RichEditor.RichEditorPlugin {
+    constructor(editor) {
+        super(editor);
+        this.name = 'myPlugin';
+    }
+
+    init() {
+        // Add toolbar button
+        this.editor.addToolbarButton('myButton', {
+            icon: '⭐',
+            title: 'My Feature',
+            action: 'myAction'
+        });
+
+        // Handle action
+        const originalExecAction = this.editor.execAction.bind(this.editor);
+        this.editor.execAction = (action, value) => {
+            if (action === 'myAction') {
+                this.doSomething();
+            } else {
+                originalExecAction(action, value);
+            }
+        };
+    }
+
+    doSomething() {
+        // Your plugin logic
+    }
+}
+```
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+B` | Bold |
+| `Ctrl+I` | Italic |
+| `Ctrl+U` | Underline |
+| `Ctrl+K` | Insert link |
+| `Ctrl+Z` | Undo |
+| `Ctrl+Y` | Redo |
+| `Ctrl+A` | Select all |
+| `Ctrl+Shift+Z` | Redo |
+| `Tab` | Indent (in lists) |
+| `Shift+Tab` | Outdent (in lists) |
+
+---
+
+## Complete Example
 
 ```javascript
 const editor = new RichEditor('#editor', {
+    // Dimensions
+    height: 500,
+    minHeight: 300,
+    width: '100%',
+    
+    // Content
+    placeholder: 'Start writing your content...',
+    initialContent: '',
+    
+    // Features
+    enableLinks: true,
+    enableImages: true,
+    enableVideos: true,
+    enableTables: true,
+    
+    // UI
+    showMenuBar: true,
+    showWordCount: true,
+    showHtmlCount: true,
+    theme: 'light',
+    
+    // Limits
+    maxCharacters: 10000,
+    
+    // Paste
+    pasteMode: 'plainText',
+    
+    // Styles
+    defaultFontFamily: 'Arial, sans-serif',
+    defaultFontSize: '14pt',
+    defaultLineHeight: '1.5',
+    enforceInlineStyles: true,
+    
+    // Auto-save
     autoSave: {
         enabled: true,
-        interval: 30000,  // Save every 30 seconds
-        key: 'my-editor-content'  // localStorage key
-    }
-});
-```
-
----
-
-## 🖼️ Image Upload
-
-### Using Base64 (Default)
-Images are converted to base64 by default.
-
-### Custom Upload Handler
-```javascript
-const editor = new RichEditor('#editor', {
+        interval: 60000,
+        key: 'my_editor_draft'
+    },
+    
+    // Image upload
     imageUpload: {
-        maxSize: 5 * 1024 * 1024,  // 5MB
-        allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
-        handler: (file, callback) => {
-            // Upload to your server
-            const formData = new FormData();
-            formData.append('image', file);
-            
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                callback(data.url);  // Pass the image URL
-            });
+        enabled: true,
+        maxSize: 5 * 1024 * 1024,
+        handler: async (file, callback) => {
+            // Your upload logic
+            const url = await uploadToServer(file);
+            callback(url);
         }
-    }
+    },
+    
+    // Events
+    events: {
+        onChange: (data) => {
+            console.log('Content changed');
+        },
+        onInit: (data) => {
+            console.log('Editor ready');
+        }
+    },
+    
+    // Toolbar
+    toolbar: [
+        ['undo', 'redo'],
+        ['formatBlock', 'fontFamily', 'fontSize'],
+        ['bold', 'italic', 'underline'],
+        ['alignLeft', 'alignCenter', 'alignRight'],
+        ['orderedList', 'unorderedList'],
+        ['link', 'image', 'table'],
+        ['sourceCode', 'fullscreen']
+    ]
 });
 ```
 
 ---
 
-## 🌐 Browser Support
+## Browser Support
 
-- ✅ Chrome (latest)
-- ✅ Firefox (latest)
-- ✅ Safari (latest)
-- ✅ Edge (latest)
-- ✅ Opera (latest)
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
 ---
 
-## 📄 License
+## License
 
 MIT License
 
-Copyright (c) 2025 Bhargav Battula
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
 ---
 
-## 👨‍💻 Author
+## Author
 
-**Bhargav Battula**
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## ⭐ Support
-
-If you find this project useful, please give it a star on GitHub!
-
----
-
-## 📝 Changelog
-
-### Version 1.0.0 (2025)
-- Initial release
-- Full-featured WYSIWYG editor
-- TinyMCE-style menu bar
-- 15+ font families
-- Table support
-- Plugin architecture
-- Feature toggles
-- Auto-save support
+Created by **Bhargav Battula**
